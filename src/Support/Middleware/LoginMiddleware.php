@@ -67,7 +67,7 @@ class LoginMiddleware implements MiddlewareInterface
             }
             $staff = Staff::findFromCache($staffId);
 
-            if ($staff['isSuper']) {
+            if ($staff['isAdmin']) {
                 $accessScope = ["all"];
             } else {
                 $role = StaffRole::findFromCache($staff->roleId);
