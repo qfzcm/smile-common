@@ -68,7 +68,7 @@ class LoginMiddleware implements MiddlewareInterface
             $staff = Staff::findFromCache($staffId);
 
             if ($staff['isAdmin']) {
-                $accessScope = ["all"];
+                $accessScope = [['all']];
             } else {
                 $role = StaffRole::findFromCache($staff->roleId);
                 foreach ($role['resources'] as $item) {
@@ -86,7 +86,7 @@ class LoginMiddleware implements MiddlewareInterface
         }
 
         if ($userId && !$staffId && !$providerId && !$request->getHeader('Is-Provider')) {
-            $accessScope = ["all"];
+            $accessScope = [['all']];
         }
 
 
