@@ -11,6 +11,8 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use GraphQL\Error\Error;
+use Hyperf\Redis\Redis;
+use Hyperf\Utils\ApplicationContext;
 use Psr\Http\Message\ResponseInterface;
 use Smile\Common\GraphQL\Factory\GraphTypeFactory;
 use Smile\Common\Support\Entity\Result;
@@ -46,10 +48,15 @@ class GraphController extends BaseController
 
         $rootValue = [];
 
+        // 个人权限
         $accessScope = SessionUtil::getAccessScope();
 
+        // 系统需验证权限
+        $redis = ApplicationContext::getContainer()->get(Redis::class);
+        $resourceAll = json_decode($redis->get('resourceAll'));
+
         try {
-            $output = GraphQL::executeQuery($schema, $query, $rootValue, [], $variables, null, null, null, $accessScope)
+            $output = GraphQL::executeQuery($schema, $query, $rootValue, [], $variables, null, null, null, $accessScope, $resourceAll)
                 ->setErrorsHandler(function (array $errors, callable $formatter) use ($isDebug) {
                     if ($isDebug) {
                         return array_map($formatter, $errors);
