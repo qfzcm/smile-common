@@ -77,7 +77,7 @@ class LoginMiddleware implements MiddlewareInterface
                 }
             }
 
-            if ($staff && $staff['changeAuthAt'] > $changeAuthAt) {
+            if ($staff && strtotime($staff['changeAuthAt']) > $changeAuthAt) {
                 throw new UnauthorizedException(
                     $this->config->get('smile.unauthorized_message', 'Token已失效，请重新登录'),
                     $this->config->get('smile.unauthorized_code', 400)
