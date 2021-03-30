@@ -47,6 +47,7 @@ class LoginMiddleware implements MiddlewareInterface
         if (array_key_exists('debugProviderId', $params) && env('APP_ENV') != 'production') {
             $providerId = $params['debugProviderId'];
             $staffId = $params['staffId'];
+            $changeAuthAt = '2147483647';
             $request = $request->withaddedHeader('Is-Provider', '1');
         }
 
