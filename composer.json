@@ -22,19 +22,19 @@
     "php": ">=7.4",
     "ext-bcmath": "*",
     "ext-json": "*",
-    "hyperf/database": "^2.0",
-    "hyperf/db-connection": "^2.0",
-    "hyperf/di": "~2.0.0",
-    "hyperf/framework": "~2.0.0",
-    "hyperf/logger": "~2.0.0",
-    "hyperf/model-cache": "^2.0",
-    "hyperf/redis": "2.0.18",
-    "hyperf/validation": "~2.0.0",
+    "hyperf/database": "~2.1",
+    "hyperf/db-connection": "~2.1",
+    "hyperf/di": "~2.1.0",
+    "hyperf/framework": "~2.1.0",
+    "hyperf/logger": "~2.1.0",
+    "hyperf/model-cache": "~2.1",
+    "hyperf/redis": "~2.1.0",
+    "hyperf/validation": "~2.1.0",
     "qfzcm/graphql-php": "master-dev"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.14",
-    "hyperf/constants": "^2.0",
+    "hyperf/constants": "~2.1",
     "mockery/mockery": "^1.0",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": ">=7.0",
@@ -43,6 +43,7 @@
     "symfony/var-dumper": "^5.1"
   },
   "config": {
+    "optimize-autoloader": true,
     "sort-packages": true
   },
   "scripts": {
