@@ -68,21 +68,28 @@ class LoginMiddleware implements MiddlewareInterface
             }
             $staff = Staff::findFromCache($staffId);
 
-            if ($staff['isAdmin']) {
-                $accessScope = [['all']];
-            } else {
-                $role = StaffRole::findFromCache($staff->roleId);
-                foreach ($role['resources'] as $item) {
-                    $resource = StaffResource::findFromCache($item);
-                    $accessScope[] = $resource['routes'];
+            if ($staff) {
+                if ($staff['isDisable'] == 1) {
+                    throw new UnauthorizedException(
+                        $this->config->get('smile.unauthorized_message', '账号已停用'),
+                        $this->config->get('smile.unauthorized_code', 400)
+                    );
                 }
-            }
-
-            if ($staff && strtotime($staff['changeAuthAt']) > $changeAuthAt) {
-                throw new UnauthorizedException(
-                    $this->config->get('smile.unauthorized_message', 'Token已失效，请重新登录'),
-                    $this->config->get('smile.unauthorized_code', 400)
-                );
+                if ($staff['isAdmin']) {
+                    $accessScope = [['all']];
+                } else {
+                    $role = StaffRole::findFromCache($staff->roleId);
+                    foreach ($role['resources'] as $item) {
+                        $resource = StaffResource::findFromCache($item);
+                        $accessScope[] = $resource['routes'];
+                    }
+                }
+                if (strtotime($staff['changeAuthAt']) > $changeAuthAt) {
+                    throw new UnauthorizedException(
+                        $this->config->get('smile.unauthorized_message', 'Token已失效，请重新登录'),
+                        $this->config->get('smile.unauthorized_code', 400)
+                    );
+                }
             }
         }
 

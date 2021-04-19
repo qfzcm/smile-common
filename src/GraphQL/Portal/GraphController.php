@@ -52,8 +52,7 @@ class GraphController extends BaseController
         $accessScope = SessionUtil::getAccessScope();
 
         // 系统需验证权限
-        $redis = ApplicationContext::getContainer()->get(Redis::class);
-        $resourceAll = json_decode($redis->get('resourceAll'), true);
+        $resourceAll = $config->get('authority_resources');
 
         try {
             $output = GraphQL::executeQuery($schema, $query, $rootValue, [], $variables, null, null, null, $accessScope, $resourceAll)
