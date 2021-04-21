@@ -8,6 +8,7 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Context;
 use Psr\Http\Message\ServerRequestInterface;
+use Smile\Common\Support\Constants\Vistor;
 use Smile\Common\Support\Entity\SessionPayloadEntity;
 use Smile\Common\Support\Exception\UnauthorizedException;
 use Smile\Common\Support\Middleware\LoginMiddleware;
@@ -22,14 +23,14 @@ class SessionUtil
         $request = Context::get(ServerRequestInterface::class);
 
         if (empty($request)) {
-            return self::VISITOR_ID;
+            return Vistor::VISITOR_ID;
         }
 
         /** @var SessionPayloadEntity $payload */
         $payload = $request->getAttribute(LoginMiddleware::PAYLOAD_KEY);
 
         if (empty($payload) || empty($payload->userId)) {
-            return self::VISITOR_ID;
+            return Vistor::VISITOR_ID;
         }
 
         return $payload->userId;
@@ -142,6 +143,6 @@ class SessionUtil
 
     public static function isVisitor()
     {
-        return self::_getUserId() == self::VISITOR_ID;
+        return self::_getUserId() == Vistor::VISITOR_ID;
     }
 }

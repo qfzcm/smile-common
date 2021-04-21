@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Smile\Common\Support\Constants\Vistor;
 use Smile\Common\Support\Entity\SessionPayloadEntity;
 use Smile\Common\Support\Exception\UnauthorizedException;
 use App\Storage\System\Model\Staff;
@@ -34,7 +35,7 @@ class LoginMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $userId = $request->getHeader('X-User-Id')[0] ?? '';
+        $userId = $request->getHeader('X-User-Id')[0] ?? Vistor::VISITOR_ID;
         $providerId = $request->getHeader('X-Provider-Id')[0] ?? '';
         $staffId = $request->getHeader('X-Staff-Id')[0] ?? '';
         $changeAuthAt = $request->getHeader('X-Change-Auth-At')[0] ?? '';
