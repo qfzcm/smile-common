@@ -3038,8 +3038,8 @@
             "version": "dev-master",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/qfzcm/graphql-php/zipball/644129505c1ae27dbe61e15dbced5426691c7461",
-                "reference": "644129505c1ae27dbe61e15dbced5426691c7461",
+                "url": "https://api.github.com/repos/qfzcm/graphql-php/zipball/2a06eea6115942b7ea057ce056c9ef176e082e5d",
+                "reference": "2a06eea6115942b7ea057ce056c9ef176e082e5d",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3092,7 +3092,7 @@
                 "issues": "https://github.com/qfzcm/graphql-php/issues",
                 "source": "https://github.com/qfzcm/graphql-php/tree/master"
             },
-            "time": "2021-04-19T06:32:35+00:00"
+            "time": "2021-04-28T08:30:04+00:00"
         },
         {
             "name": "roave/better-reflection",
