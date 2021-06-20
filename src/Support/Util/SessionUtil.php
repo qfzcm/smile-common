@@ -52,7 +52,7 @@ class SessionUtil
         return $userId;
     }
 
-    protected static function _getProviderId(): int
+    protected static function _getProviderId()
     {
         /** @var ServerRequestInterface $request */
         $request = Context::get(ServerRequestInterface::class);
@@ -71,7 +71,7 @@ class SessionUtil
         return $payload->providerId;
     }
 
-    public static function getProviderId(): int
+    public static function getProviderId()
     {
         $providerId = self::_getProviderId();
         if ($providerId == 0) {
@@ -87,7 +87,7 @@ class SessionUtil
         return $providerId;
     }
 
-    protected static function _getStaffId(): int
+    protected static function _getStaffId()
     {
         /** @var ServerRequestInterface $request */
         $request = Context::get(ServerRequestInterface::class);
@@ -106,7 +106,7 @@ class SessionUtil
         return $payload->staffId;
     }
 
-    public static function getStaffId(): int
+    public static function getStaffId()
     {
         $staff = self::_getStaffId();
         if ($staff == 0) {
