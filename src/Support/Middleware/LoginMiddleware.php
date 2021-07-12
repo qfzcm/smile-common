@@ -15,6 +15,7 @@ use Smile\Common\Support\Constants\Vistor;
 use Smile\Common\Support\Entity\SessionPayloadEntity;
 use Smile\Common\Support\Exception\UnauthorizedException;
 use App\Storage\System\Model\Staff;
+use App\Storage\System\Model\Provider;
 use App\Storage\System\Model\StaffRole;
 use App\Storage\System\Model\StaffResource;
 
@@ -67,10 +68,18 @@ class LoginMiddleware implements MiddlewareInterface
                     $this->config->get('smile.unauthorized_code', 400)
                 );
             }
+            $provider = Provider::findFromCache($providerId);
             $staff = Staff::findFromCache($staffId);
 
+            if ($provider['isDisabled'] == 1) {
+                throw new UnauthorizedException(
+                    $this->config->get('smile.unauthorized_message', '服务商已停用'),
+                    $this->config->get('smile.unauthorized_code', 400)
+                );
+            }
+
             if ($staff) {
-                if ($staff['isDisable'] == 1) {
+                if ($staff['isDisabled'] == 1) {
                     throw new UnauthorizedException(
                         $this->config->get('smile.unauthorized_message', '账号已停用'),
                         $this->config->get('smile.unauthorized_code', 400)
