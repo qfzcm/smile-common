@@ -15,7 +15,7 @@ use Smile\Common\Support\Constants\Vistor;
 use Smile\Common\Support\Entity\SessionPayloadEntity;
 use Smile\Common\Support\Exception\UnauthorizedException;
 use App\Storage\System\Model\Staff;
-use App\Storage\System\Model\Provider;
+use App\Storage\Provider\Model\Provider;
 use App\Storage\System\Model\StaffRole;
 use App\Storage\System\Model\StaffResource;
 
