@@ -40,6 +40,7 @@ class LoginMiddleware implements MiddlewareInterface
         $providerId = $request->getHeader('X-Provider-Id')[0] ?? '';
         $staffId = $request->getHeader('X-Staff-Id')[0] ?? '';
         $changeAuthAt = $request->getHeader('X-Change-Auth-At')[0] ?? '';
+
         $params = $request->getQueryParams();
 
         if (array_key_exists('debugUser', $params) && env('APP_ENV') != 'production') {
@@ -53,66 +54,36 @@ class LoginMiddleware implements MiddlewareInterface
             $request = $request->withaddedHeader('Is-Provider', '1');
         }
 
-        if (empty($userId) && !$request->getHeader('Is-Provider')) {
+
+        if (empty($providerId) || empty($userId)) {
             throw new UnauthorizedException(
-                $this->config->get('smile.unauthorized_message', '请您登录后再进行操作'),
+                $this->config->get('smile.unauthorized_message', '请先登录后操作'),
                 $this->config->get('smile.unauthorized_code', 400)
             );
         }
 
-        $accessScope = [];
-        if ($request->getHeader('Is-Provider')) {
-            if (empty($providerId) || empty($staffId)) {
+        $staff = Staff::findFromCache($staffId);
+        if ($staff) {
+            if ($staff['isDisabled'] == 1 || strtotime($staff['changeAuthAt']) > $changeAuthAt) {
                 throw new UnauthorizedException(
-                    $this->config->get('smile.unauthorized_message', '您还不是服务商'),
+                    $this->config->get('smile.unauthorized_message', 'Token已失效，请重新登录'),
                     $this->config->get('smile.unauthorized_code', 400)
                 );
             }
-            $provider = Provider::findFromCache($providerId);
-            $staff = Staff::findFromCache($staffId);
 
+            $provider = Provider::findFromCache($providerId);
             if ($provider['isDisabled'] == 1) {
                 throw new UnauthorizedException(
-                    $this->config->get('smile.unauthorized_message', '服务商已停用'),
+                    $this->config->get('smile.unauthorized_message', '服务商已停用，请重新登录'),
                     $this->config->get('smile.unauthorized_code', 400)
                 );
             }
-
-            if ($staff) {
-                if ($staff['isDisabled'] == 1) {
-                    throw new UnauthorizedException(
-                        $this->config->get('smile.unauthorized_message', '账号已停用'),
-                        $this->config->get('smile.unauthorized_code', 400)
-                    );
-                }
-                if ($staff['isAdmin']) {
-                    $accessScope = [['all']];
-                } else {
-                    $role = StaffRole::findFromCache($staff->roleId);
-                    foreach ($role['resources'] as $item) {
-                        $resource = StaffResource::findFromCache($item);
-                        $accessScope[] = $resource['routes'];
-                    }
-                }
-                if (strtotime($staff['changeAuthAt']) > $changeAuthAt) {
-                    throw new UnauthorizedException(
-                        $this->config->get('smile.unauthorized_message', 'Token已失效，请重新登录'),
-                        $this->config->get('smile.unauthorized_code', 400)
-                    );
-                }
-            }
         }
-
-        if ($userId && !$staffId && !$providerId && !$request->getHeader('Is-Provider')) {
-            $accessScope = [['all']];
-        }
-
 
         $sessionPayload = new SessionPayloadEntity();
         $sessionPayload->userId = $userId;
         $sessionPayload->providerId = $providerId;
         $sessionPayload->staffId = $staffId;
-        $sessionPayload->accessScope = $accessScope;
 
         $request = Context::override(ServerRequestInterface::class, fn() => $request->withAttribute(self::PAYLOAD_KEY, $sessionPayload));
 

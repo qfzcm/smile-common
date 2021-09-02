@@ -48,14 +48,8 @@ class GraphController extends BaseController
 
         $rootValue = [];
 
-        // 个人权限
-        $accessScope = SessionUtil::getAccessScope();
-
-        // 系统需验证权限
-        $resourceAll = $config->get('authority_resources');
-
         try {
-            $output = GraphQL::executeQuery($schema, $query, $rootValue, [], $variables, null, null, null, $accessScope, $resourceAll)
+            $output = GraphQL::executeQuery($schema, $query, $rootValue, [], $variables, null, null, null)
                 ->setErrorsHandler(function (array $errors, callable $formatter) use ($isDebug) {
                     if ($isDebug) {
                         return array_map($formatter, $errors);

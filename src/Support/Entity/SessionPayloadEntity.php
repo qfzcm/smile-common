@@ -12,7 +12,7 @@ use Smile\Common\Support\Parent\BaseEntity;
  * @property string $userId
  * @property int $providerId
  * @property int $staffId
- * @property array $accessScope
+ * @property string $imId
  */
 class SessionPayloadEntity extends BaseEntity
 {
