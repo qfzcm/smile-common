@@ -78,6 +78,13 @@ class LoginMiddleware implements MiddlewareInterface
                 );
             }
 
+            if ($provider['level'] < 1 && !$request->hasHeader('Union')) {
+                throw new UnauthorizedException(
+                    $this->config->get('smile.unauthorized_message', '您还不是超企云服务商，请联系客服'),
+                    $this->config->get('smile.unauthorized_code', 400)
+                );
+            }
+
             if ($staff) {
                 if ($staff['isDisabled'] == 1) {
                     throw new UnauthorizedException(
