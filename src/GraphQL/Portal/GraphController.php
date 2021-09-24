@@ -13,6 +13,7 @@ use Hyperf\HttpServer\Annotation\RequestMapping;
 use GraphQL\Error\Error;
 use Hyperf\Redis\Redis;
 use Hyperf\Utils\ApplicationContext;
+use Hyperf\Validation\ValidationException;
 use Psr\Http\Message\ResponseInterface;
 use Smile\Common\GraphQL\Factory\GraphTypeFactory;
 use Smile\Common\Support\Entity\Result;
@@ -73,7 +74,11 @@ class GraphController extends BaseController
                     $isDebug ? DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::RETHROW_INTERNAL_EXCEPTIONS : false
                 );
         } catch (\Throwable $e) {
-            throw new BusinessException(401, $e->getMessage());
+            if ($e instanceof ValidationException) {
+                throw $e;
+            } else {
+                throw new BusinessException(401, $e->getMessage());
+            }
         }
 
         if (!array_key_exists('data', $output)) {
